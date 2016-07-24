@@ -1,6 +1,6 @@
 # Changelog
 
-## Upcoming
+## 0.2
 
 - Add MIDI control change functionality
 - Reorganise project file structure, so project can be compiled by Arduino
