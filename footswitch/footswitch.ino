@@ -1,5 +1,5 @@
 /*
- Bluetooth MIDI Footswitch v0.1
+ Bluetooth MIDI Footswitch v0.2
  Copyright (c) Paul Williamson 2016
 
  This project uses the LightBlue-Bean board to send MIDI CC messages.
@@ -21,6 +21,21 @@ const int numBtns = 6;
 
 // Set up an array to track each buttons state
 bool buttonState[numBtns];
+
+/*
+ CC numbers sent by the buttons, can be any number in Control Change Messages
+ table: https://www.midi.org/specifications/category/reference-tables
+
+ See also `BeanMidi.h` for control names, or just use the integer value.
+*/
+int ccNumbers[numBtns] = {
+  GENERALPURPOSECONTROLLER1,
+  GENERALPURPOSECONTROLLER2,
+  GENERALPURPOSECONTROLLER3,
+  GENERALPURPOSECONTROLLER4,
+  GENERALPURPOSECONTROLLER5,
+  GENERALPURPOSECONTROLLER6
+};
 
 void setup() {
   // Configure Bean to wake up when a client connects
@@ -80,6 +95,12 @@ void readButton(int i) {
 void buttonPressed(int btn) {
   buttonState[btn] = false;
   logButtonAction("pressed", btn);
+  sendMidiMessageForButton(btn);
+}
+
+void sendMidiMessageForButton(int btn) {
+  int ccNumber = ccNumbers[btn];
+  BeanMidi.sendMessage(CONTROLCHANGE, ccNumber, 127);
 }
 
 void buttonReleased(int btn) {
